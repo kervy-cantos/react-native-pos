@@ -3,8 +3,6 @@ import { useCallback } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
 	const [fontsLoaded] = useFonts({
 		DMBold: require('../assets/fonts/DMSans-Bold.ttf'),
@@ -14,11 +12,18 @@ export default function RootLayout() {
 
 	const onLayoutRootView = useCallback(async () => {
 		if (fontsLoaded) {
+			console.log('Fonts loaded, hiding splash screen');
 			await SplashScreen.hideAsync();
+		} else {
+			console.log('Fonts not yet loaded');
 		}
 	}, [fontsLoaded]);
+
 	if (!fontsLoaded) {
+		console.log('Waiting for fonts to load...');
 		return null;
 	}
+
+	console.log('Fonts loaded, rendering app');
 	return <Stack onLayout={onLayoutRootView} />;
 }

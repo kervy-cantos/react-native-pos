@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 10.2.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyDyFOsDbUU_wLv1j5GpEzUMJKz0Y6puLFM",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "pos-shop-19744.firebaseapp.com",
+        "EXPO_PUBLIC_DATABASE_URL": "https://pos-shop-19744-default-rtdb.asia-southeast1.firebasedatabase.app",
+        "EXPO_PUBLIC_PROJECT_ID": "pos-shop-19744",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "pos-shop-19744.appspot.com",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "669206591902",
+        "EXPO_PUBLIC_APP_ID": "1:669206591902:web:bb58a2d0ff30f79bad7e8f",
+        "EXPO_PUBLIC_MEASUREMENT_ID": "G-3V2FQTL7HZ"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
