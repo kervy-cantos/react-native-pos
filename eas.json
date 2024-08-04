@@ -29,7 +29,8 @@
         "EXPO_PUBLIC_MEASUREMENT_ID": "G-3V2FQTL7HZ"
       },
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "latest"
       }
     }
   },
