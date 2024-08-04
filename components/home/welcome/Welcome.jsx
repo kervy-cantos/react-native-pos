@@ -49,6 +49,9 @@ const Welcome = () => {
 					}}>
 					<Text style={styles.textStyle}>Add Product</Text>
 				</Pressable>
+				<Pressable style={[styles.button, styles.buttonAdd3]} onPress={() => router.push('/Inventory')}>
+					<Text style={styles.textStyle}>Inventory</Text>
+				</Pressable>
 				<Pressable style={[styles.button, styles.buttonAdd2]} onPress={() => router.push('/AddCategory')}>
 					<Text style={styles.textStyle}>Add Category</Text>
 				</Pressable>

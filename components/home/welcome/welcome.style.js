@@ -72,6 +72,10 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.secondary,
 		color: 'white'
 	},
+	buttonAdd3: {
+		backgroundColor: COLORS.primary,
+		color: 'white'
+	},
 	textStyle: {
 		color: 'white'
 	},
