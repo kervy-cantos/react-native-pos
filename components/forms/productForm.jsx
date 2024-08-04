@@ -251,10 +251,10 @@ const styles = StyleSheet.create({
 	},
 	centeredForm: {
 		marginBottom: 20,
-		width: '80%',
+		width: '95%',
 		fontSize: 20,
-		backgroundColor: '#f9f9f9',
-		padding: 25,
+		backgroundColor: 'white',
+		padding: 40,
 		borderRadius: 5,
 		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
 	},

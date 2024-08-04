@@ -37,36 +37,45 @@ const CategoryForm = props => {
 			{({ handleChange, touched, handleSubmit, setFieldTouched, values, errors }) => (
 				<View style={styles.formView}>
 					<View style={styles.centeredForm}>
-						<Text>Category Name</Text>
-						<View style={styles.inpuContainer}>
+						<Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Category Name</Text>
+						<View style={styles.inputContainer}>
 							<TextInput
 								onChangeText={handleChange('name')}
 								style={styles.inputStyle}
 								onBlur={() => setFieldTouched('name')}
 								value={values.name}
+								placeholder='Enter category name'
 							/>
 						</View>
 						{touched.name && errors.name && <Text style={{ color: 'red' }}>{errors.name}</Text>}
-						<View style={styles.inpuContainer}>
+						<Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Category Description</Text>
+						<View style={styles.inputContainer}>
 							<TextInput
 								onChangeText={handleChange('description')}
 								style={styles.inputStyle}
 								onBlur={() => setFieldTouched('description')}
 								value={values.description}
+								placeholder='Describe the category'
 							/>
 						</View>
 
 						<View style={styles.formButtonContainer}>
-							<Pressable style={styles.formButton} onPress={handleSubmit}>
-								<Text style={styles.pressable}>
-									{loading ? <ActivityIndicator size='small' color={'white'} /> : 'ADD'}
-								</Text>
-							</Pressable>
+							{loading ? (
+								<ActivityIndicator size='small' color={COLORS.tertiary} />
+							) : (
+								<Button
+									style={styles.formButton}
+									onPress={handleSubmit}
+									title='Submit'
+									color={COLORS.tertiary}
+								/>
+							)}
+
 							<Button
 								style={styles.formButton}
 								onPress={() => router.push('/')}
 								title='Cancel'
-								color='#F5004F'
+								color={COLORS.gray}
 							/>
 						</View>
 					</View>
@@ -103,7 +112,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 20,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: 'white'
 	},
 	centeredForm: {
 		marginBottom: 20,
@@ -116,20 +126,30 @@ const styles = StyleSheet.create({
 	},
 	inputStyle: {
 		border: '1px solid #088395',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
 		borderRadius: 5,
 		fontSize: 20,
 		padding: 5,
+		paddingTop: 10,
 		marginBottom: 10
 	},
 	formButtonContainer: {
 		color: '#fff',
 		flexDirection: 'row',
+		gap: 10,
 		justifyContent: 'space-between',
 		fontSize: 20,
-		paddingLeft: 50,
-		paddingRight: 50,
+
 		marginTop: 20,
 		borderRadius: 5
+	},
+	inputContainer: {
+		borderWidth: 1,
+		borderColor: COLORS.tertiary,
+		borderRadius: 10,
+		marginBottom: 10
 	}
 });
 

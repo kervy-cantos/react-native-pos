@@ -1,36 +1,52 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Image, FlatList, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, Image, FlatList, Pressable, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import styles from './welcome.style';
-import { icons, SIZES } from '../../../constants';
+import { COLORS, FONT, icons, SIZES } from '../../../constants';
 import { useEffect, useMemo } from 'react';
 import ProductCard from '../../common/cards/popular/PopularJobCard';
-import { useCategoriesStore, useProductsStore } from '../../../hooks/zustand/store';
+import { useCartStore, useCategoriesStore, useProductsStore } from '../../../hooks/zustand/store';
 
 const Welcome = () => {
 	const router = useRouter();
 
-	const [activeTab, setActiveTab] = useState('');
+	const [activeTab, setActiveTab] = useState({ id: '', name: 'All' });
 	const [searchValue, setSearchValue] = useState('');
+	const [tabs, setTabs] = useState([]);
 
-	const fetchCategories = useCategoriesStore(state => state.fetchCategories);
-	const { data: categoryData, fetchProducts } = useProductsStore(state => state);
-	const productTypes = useCategoriesStore(state => state.data);
+	const { fetchCategories, data: productTypes, loading: categoriesLoading } = useCategoriesStore(state => state);
+	const { data: categoryData, fetchProducts, loading: productsLoading } = useProductsStore(state => state);
 
 	useEffect(() => {
 		fetchCategories();
 		fetchProducts();
 	}, []);
 
+	useEffect(() => {
+		setTabs([{ id: '', name: 'All' }, ...productTypes]);
+	}, [JSON.stringify(productTypes)]);
+
 	const productsPerCategory = useMemo(() => {
-		if (activeTab === '') return [];
-		return categoryData.filter(product => product.categoryId === activeTab.id);
-	}, [activeTab]);
+		if (!searchValue) {
+			if (activeTab.id == '') return categoryData;
+			return categoryData.filter(product => product.categoryId === activeTab.id);
+		} else {
+			return categoryData.filter(product => product.name.toLowerCase().includes(searchValue.toLowerCase()));
+		}
+	}, [activeTab, productTypes, categoryData, searchValue]);
 
 	return (
 		<ScrollView keyboardShouldPersistTaps='handled'>
 			<View style={styles.container}>
-				<Pressable style={[styles.button, styles.buttonAdd]} onPress={() => router.push('/AddProduct')}>
+				<Pressable
+					style={[styles.button, styles.buttonAdd]}
+					onPress={() => {
+						{
+							productTypes.length === 0
+								? Alert.alert('Error', 'Please add a category first')
+								: router.push('/AddProduct');
+						}
+					}}>
 					<Text style={styles.textStyle}>Add Product</Text>
 				</Pressable>
 				<Pressable style={[styles.button, styles.buttonAdd2]} onPress={() => router.push('/AddCategory')}>
@@ -42,7 +58,7 @@ const Welcome = () => {
 					<TextInput
 						style={styles.searchInput}
 						value={searchValue}
-						onChange={e => setSearchValue(e.target.value)}
+						onChangeText={text => setSearchValue(text)}
 						placeholder='What are you looking for'
 					/>
 				</View>
@@ -51,19 +67,30 @@ const Welcome = () => {
 				</Pressable>
 			</View>
 			<View style={styles.tabsContainer}>
-				<FlatList
-					horizontal
-					data={productTypes}
-					renderItem={({ item }) => (
-						<Pressable
-							style={styles.tab(activeTab, item)}
-							onPress={() => {
-								setActiveTab(item);
-							}}>
-							<Text style={styles.tabText(activeTab, item)}>{item?.name}</Text>
-						</Pressable>
-					)}
-				/>
+				{categoriesLoading || productsLoading ? (
+					<ActivityIndicator size='large' color='black' />
+				) : (
+					<FlatList
+						horizontal
+						data={tabs}
+						showsHorizontalScrollIndicator={false}
+						renderItem={({ item }) => (
+							<Pressable
+								style={styles.tab(activeTab, item)}
+								onPress={() => {
+									setActiveTab(item);
+								}}>
+								{item?.name === 'All' ? (
+									<Text style={{ color: activeTab.id == '' ? COLORS.secondary : COLORS.gray2 }}>
+										{item?.name}
+									</Text>
+								) : (
+									<Text style={styles.tabText(activeTab, item)}>{item?.name}</Text>
+								)}
+							</Pressable>
+						)}
+					/>
+				)}
 			</View>
 			<View
 				style={{
@@ -71,13 +98,12 @@ const Welcome = () => {
 					flexWrap: 'wrap',
 					padding: SIZES.medium
 				}}>
-				{activeTab != '' &&
-					productsPerCategory.length != 0 &&
+				{productsPerCategory.length != 0 &&
 					productsPerCategory.map(product => (
 						<View
 							key={product.id}
 							style={{
-								width: '50%' // Ensures each item takes up 25% of the container width, 4 items per row
+								width: '50%' // Ensures each item takes up 50% of the container width, 2 items per row
 							}}>
 							<ProductCard food={product} />
 						</View>
